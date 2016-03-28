@@ -1,0 +1,138 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>BOOKTRACK</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		{% load staticfiles %}
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+		<script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<style>
+    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+    .row.content {height: 550px}
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+        
+    /* On small screens, set height to 'auto' for the grid */
+    @media screen and (max-width: 767px) {
+      .row.content {height: auto;} 
+    }
+	
+	.tilt {
+    transform: rotate(3deg);
+    -moz-transform: rotate(3deg);
+    -webkit-transform: rotate(3deg);
+  }
+
+  .column {
+    
+  }
+
+  <!-- .book {
+    background-image:url({% static 'track/cover.jpg' %});
+    background-size:100% 100%;
+  } -->
+
+	</style>
+	
+<script type="text/javascript">
+ 
+	$(onPageLoad);
+
+  function onPageLoad()
+  {
+    $( ".column" ).sortable({
+      connectWith: ".column",
+      handle: ".header, .content",
+	  containment: ".container-fluid",
+	  cursor: "move",
+	  <!-- cursorAt: { top: 1, left: 1 }, -->
+	  delay: 100,
+	  opacity: 0.7,
+	  revert: 350,
+	  tolerance: "pointer",
+      start: function (event, ui) {
+        ui.item.addClass('tilt');
+      },
+      stop: function (event, ui) {
+        ui.item.removeClass('tilt');
+      },
+	  receive: function (event, ui){
+		var book_id = ui.item.attr("id");
+		var status_id = event.target.id;
+		var ids = { s_id : status_id, b_id : book_id }
+
+		$.ajax({
+		  url: "{% url 'track:change_status' %}",
+		  method: "POST",
+		  data: ids,
+		  contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+		  processData: true,
+		  });
+	  }
+    });
+  }
+</script>
+	</head>
+<body>
+
+<br/>
+{% if user.is_authenticated %}
+	<div>
+		<p>Welcome, {{ user.username }}!</p>
+		<p><a href="{% url 'track:logout' %}">Logout</a></p>
+	</div>
+
+<br/>
+  {% if books_list %}
+<div class="container-fluid">
+	<div class="content">
+	<div class="col-sm-1"></div>
+	<div class="col-sm-10">
+	<div class="row" id="bookshelf">
+
+	{% for status, books in books_list.items %}
+		<div class="col-sm-{% widthratio 12 books_list|length 1 %} well column sortable" id="status_{{status.id}}">
+            <h4>{{ status.status_text }}</h4>
+			{% if status.id == 1 %}
+			<p><a href="{% url 'track:create_book' %}" class="btn btn-default" role="button">Add a new book</a></p>
+			{% elif books|length == 0 %}
+			<p>Drag&Drop a book here to chage its status</p>
+			{% else %}
+			<br/><br/>
+			{% endif %}
+						
+			{% for book in books %}
+			<div class="well" style="box-shadow:1px 5px 10px gray" id="book_{{book.id}}">
+				<div class="header"><b><a href="{% url 'track:details' book.id %}">{{ book.title }}</a></b></div>
+				<div class="content"><p>Author: {{ book.author }}</p><p>Year: {{ book.year }}</p><p>Genre: {{ book.genre }}</p><p>Language: {{ book.language }}</p><p>Added at: {{book.date_pub|date:"d M Y, H:i"}}</p>
+				<p><a href="{% url 'track:delete_book' book.id %}" class="btn btn-default" role="button">delete</a></p>
+				</div>
+			</div>
+			{% endfor %}
+	
+		</div>
+	{% endfor %}
+	</div>
+	</div>
+	<div class="col-sm-1"></div>
+	</div>
+  {% else %}
+    <p>You haven't add any books yet.</p>
+  {% endif %}
+
+{% else %}
+	<div>You should be logged in to view your books</div>
+    <div><p><a href="{% url 'track:register' %}">Register</a></p><p><a href="{% url 'track:login' %}">Login</a></p></div>
+{% endif %}
+</div>
+
+</body>
+
+</html>

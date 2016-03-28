@@ -1,0 +1,83 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>BOOKTRACK</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<style>
+    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+    .row.content {height: 550px}
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+        
+    /* On small screens, set height to 'auto' for the grid */
+    @media screen and (max-width: 767px) {
+      .row.content {height: auto;} 
+    }
+	</style>
+
+
+	</head>
+
+<body>
+
+<h1>Add A Book</h1>
+
+{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
+<br/>
+<p><a href="{% url 'track:main' %}">Back to main page</a></p>
+<br/>
+<div class="row">
+<div class="col-sm-2"></div>
+{% if user.is_authenticated %}
+	<div class="col-sm-8">
+	<form class="form" role='form' enctype="multipart/form-data" method="post" name='add_form'>
+	{% csrf_token %}
+	<div class="form-group">
+		<label for="title">Title of the book:</label>
+		<input type="text" class="form-control" id="title" name="title" placeholder="Book's title" autofocus>
+	  </div>
+	  <div class="form-group">
+		<label for="author">Author:</label>
+		<input type="text" class="form-control" id="author" name="author">
+	  </div>
+	  <div class="form-group">
+		<label for="year">Year:</label>
+		<input type="text" class="form-control" id="year" name="year">
+	  </div>
+	  <div class="form-group">
+		<label for="language" class="control-label">Language:</label>
+		  <select class="form-control" id="language" name="language">
+			<option value=""></option>
+		  {% for lang in language_list %}
+			<option value="{{lang.id}}">{{lang.language}}</option>
+		  {% endfor %}
+		  </select>
+	  </div>
+	  <div class="form-group">
+		<label for="genre" class="control-label">Genre:</label>
+			<select class="form-control" id="genre" name="genre">
+				<option value=""></option>
+		  {% for gen in genre_list %}
+				<option value="{{gen.id}}">{{gen.genre}}</option>
+		  {% endfor %}
+		  </select>
+	  </div>
+	<input type="submit" value="Add Book"/>
+	</form>
+{% else %}
+    <p>You should be logged in to add books!</p>
+{% endif %}
+	</div>
+<div class="col-sm-2"></div>
+</div>
+</body>
+
+</html>

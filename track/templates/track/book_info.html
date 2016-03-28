@@ -1,0 +1,53 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Full information about the book</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<style>
+    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+    .row.content {height: 550px}
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+        
+    /* On small screens, set height to 'auto' for the grid */
+    @media screen and (max-width: 767px) {
+      .row.content {height: auto;} 
+    }
+	</style>
+	</head>
+
+<body>
+<br/>
+<div class="container-fluid">
+
+{% if book %}
+<div class="well">
+	<h3><b>{{ book.title }}</b></h3>
+	<p><b>Author:</b> {{ book.author }}</p>
+	<p><b>Year:</b> {{ book.year }}</p>
+	<p><b>Genre:</b> {{ book.genre }}</p>
+	<p><b>Language:</b> {{ book.language }}</p>
+	<p><b>Book added:</b> {{ book.date_pub }}</p>
+	{% if book.status_id == 1 %}
+	<p><b>Status:</b> "You planned this book for reading."</p>
+	{% elif book.status_id == 2 %}
+	<p><b>Status:</b> "You're reading this book currently."</p>
+	{% elif book.status_id == 3 %}
+	<p><b>Status:</b> "You've read this book already."</p>
+	{% endif %}
+</div>
+{% endif %}
+
+</div>
+
+</body>
+
+</html>

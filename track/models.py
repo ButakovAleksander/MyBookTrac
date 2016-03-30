@@ -38,7 +38,7 @@ class Book(models.Model):
     language = models.ForeignKey(Language, on_delete=models.CASCADE)
     status = models.ForeignKey(Status, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    date_pub = models.DateTimeField('date published', auto_now=True)
+    date_pub = models.DateTimeField('date published')
 
     def __str__(self):
         book_string = "{}, {}, {}, {}".format(self.title, self.author, self.genre, self.language)

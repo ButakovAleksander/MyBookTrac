@@ -1,8 +1,5 @@
-#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-# import urllib2
-# from urllib import urlencode
 import urllib.request
 from urllib.parse import urlencode
 
@@ -27,8 +24,9 @@ class Recommender(object):
                             ]
         
         encoded_query = self.encode_url(parameters_list)
+        binary_query = encoded_query.encode('utf-8')
 
-        request = urllib.request.urlopen(self.VK_API_WALL_POST, data=encoded_query)
+        request = urllib.request.urlopen(self.VK_API_WALL_POST, data=binary_query)
 
     def encode_url(self, q_list):
 

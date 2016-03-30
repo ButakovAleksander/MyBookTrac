@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+import urllib.request
+
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.urlresolvers import reverse
@@ -13,7 +15,9 @@ from django.db import IntegrityError
 
 from .models import Status, Book, Language, Genre
 
-# from .utils.post_in_social_network import Recommender
+from .utils.post_in_social_network import Recommender
+from .utils.search_book_info import get_book_info
+from .utils.search_for_author import get_author_info
 
 
 class LogIn(View):
@@ -112,7 +116,7 @@ def landing_page(request):
 def index(request, user_id):
 
 	if int(user_id) != request.user.id:
-		return HttpResponse("This user has forbidden to see his/her board. Get back to your page.")
+		return HttpResponse("This user has forbidden to see his/her board. Return to your page.")
 		
 	else:
 		
@@ -190,12 +194,11 @@ def change_status(request):
 	book.status_id = status_id
 	book.save()
 
-	# if int(book.status_id) == Status.objects.all().filter(status_text="Recommend To Friends")[0].id:
-	# 	print("Got here")
+	if int(book.status_id) == Status.objects.all().filter(status_text="Recommend To Friends")[0].id:
 
-	# 	message = book.title+'\n'+book.author
-	# 	r = Recommender()
-	# 	r.post_to_vk(message)
+		message = 'I recommend the book "{0}" from {1}'.format(book.title, book.author)
+		r = Recommender()
+		r.post_to_vk(message)
 
 	# #return HttpResponseRedirect(reverse('track:index'))
 	return HttpResponse('')
@@ -222,6 +225,13 @@ def details(request, book_id):
 		return HttpResponse(response)
 	else:
 		template = 'track/book_info.html'
-		context = {'book': book}
+
+		language = Language.objects.get(pk=book.language_id).language
+
+		book_info = get_book_info(book.title, book.author)
+
+		author_info = get_author_info(book.author, language)
+		
+		context = {'book': book, 'book_info': book_info, 'author_info': author_info}
 
 		return render(request, template, context)

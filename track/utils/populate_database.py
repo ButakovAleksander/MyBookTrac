@@ -19,7 +19,8 @@ def populate():
         'French',
         'Spanish',
         'Italian',
-        'Arabic'
+        'Arabic',
+        'Portuguese'
     )
 
     GENRES = (
@@ -29,6 +30,8 @@ def populate():
         'PopSci',
         'War Novel',
         'Philosophical Novel'
+        'Fantasy',
+        'Epos'
     )
 
     # for lang in LANGUAGES:

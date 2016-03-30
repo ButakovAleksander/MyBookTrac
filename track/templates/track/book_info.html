@@ -30,21 +30,53 @@
 
 {% if book %}
 <div class="well">
-	<h3><b>{{ book.title }}</b></h3>
-	<p><b>Author:</b> {{ book.author }}</p>
-	<p><b>Year:</b> {{ book.year }}</p>
-	<p><b>Genre:</b> {{ book.genre }}</p>
-	<p><b>Language:</b> {{ book.language }}</p>
-	<p><b>Book added:</b> {{ book.date_pub }}</p>
-	{% if book.status_id == 1 %}
-	<p><b>Status:</b> "You planned this book for reading."</p>
-	{% elif book.status_id == 2 %}
-	<p><b>Status:</b> "You're reading this book currently."</p>
-	{% elif book.status_id == 3 %}
-	<p><b>Status:</b> "You've read this book already."</p>
-	{% endif %}
+ <div class="row">
+	<div class="col-sm-2">
+	<img src="{{ book_info.image }}" class="img-responsive" alt="Book cover for '{{ book.title }}'"></img>
+	</div>
+	<div class="col-sm-10">
+		<h3><b>{{ book.title }}</b></h3>
+		<p><b>Author:</b> {{ book.author }}</p>
+		<p><b>Year:</b> {{ book.year }}</p>
+		<p><b>Genre:</b> {{ book.genre }}</p>
+		<p><b>Language:</b> {{ book.language }}</p>
+		<p><b>Book added:</b> {{ book.date_pub }}</p>
+		{% if book.status_id == 1 %}
+		<p><b>Status:</b> "You planned this book for reading."</p>
+		{% elif book.status_id == 2 %}
+		<p><b>Status:</b> "You're reading this book currently."</p>
+		{% elif book.status_id == 3 %}
+		<p><b>Status:</b> "You've read this book already."</p>
+		{% endif %}
+	</div>
+ </div>
 </div>
 {% endif %}
+
+<div class="well">
+<p><b>Description</b></p><br/>
+{% if book_info.description %}
+	<p>{{ book_info.description }}</p>
+{% else %}
+	<p>No description found</p>
+{% endif %} 
+</div>
+
+<div class="well">
+<div class="row">
+	<div class="col-sm-2">
+	<img src="{{ author_info.photo }}" class="img-responsive" alt="Photo of '{{ book.author }}'"></img>
+	</div>
+<div class="col-sm-10">
+<p><b>Author</b></p><br/>
+{% if author_info %}
+	<p>{{ author_info.author_bio }}</p>
+{% else %}
+	<p>No information about {{ book.author }} found</p>
+{% endif %}
+</div>
+</div>
+</div>
 
 </div>
 

@@ -21,10 +21,10 @@ class TextProcessor(object):
 
     def tokenize_string(self, string):
 
-        tokens = (token.strip(self.PUNCTUATION)
+        tokens = [token.strip(self.PUNCTUATION).lower()
                         for token in self.SPLITCHARS.split(string) 
                             if len(token) > 0
-                    )
+                    ]
 
         return tokens
 

@@ -17,11 +17,8 @@ from .text_processor import TextProcessor
 class AuthorSearcher(object):
 
     def __init__(self):
-        pass
-
-    def find_author_in_wiki(self, author, language):
-
-        language_dict = {
+        
+        self.language_dict = {
                 'Russian': 'ru',
                 'English': 'en',
                 'Spanish': 'es',
@@ -32,7 +29,9 @@ class AuthorSearcher(object):
                 'Arabic': 'ar'
         }
 
-        wiki_lang = language_dict[language]
+    def find_author_in_wiki(self, author, language):
+
+        wiki_lang = self.language_dict[language]
 
         wikipedia.set_lang(wiki_lang)        
 
@@ -69,6 +68,9 @@ class PhotoSearcher(object):
 
     CLASS_WITH_IMAGE = "//*[re:test(@class, 'rg_meta', 'i')]"
     RG_META = re.compile(r'<div\s+class=\"rg_meta\">(.*?)</div>')
+
+    def __init__(self):
+        self.tokenizer = TextProcessor()
 
     def get_photo(self, author):
 
@@ -118,10 +120,7 @@ class PhotoSearcher(object):
 
     def _build_query_string(self, author):
 
-        tokenizer = TextProcessor()
-
-        encoded_author = tokenizer.tokenize_for_api(author)
-
+        encoded_author = self.tokenizer.tokenize_for_api(author)
 
         query = '{url}"{author}"'.format(url=self.GOOGLE_IMAGES_API, author=encoded_author)
 

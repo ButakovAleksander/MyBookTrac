@@ -7,9 +7,8 @@ from urllib.parse import urlencode
 class Recommender(object):
 
     VK_API_WALL_POST = '''https://api.vk.com/method/wall.post?'''
-    ACCESS_TOKEN = '13959d84ef16caa20a35d8e118ce25c2c2a9f413779cb8d11e75179828435a3f5fa4e8c8d57f9323ef6da'
-    OWNER_ID = '3907424'
-    # OWNER_ID = '34142147'
+    ACCESS_TOKEN = ''
+    OWNER_ID = ''
     V = '5.50'
 
     def __init__(self):

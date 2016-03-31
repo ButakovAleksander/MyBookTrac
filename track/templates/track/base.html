@@ -87,6 +87,7 @@
 	<div>
 		<p>Welcome, {{ user.username }}!</p>
 		<p><a href="{% url 'track:logout' %}">Logout</a></p>
+		<p><a href="{% url 'track:change_settings' user.id %}">My board settings</a></p>
 	</div>
 
 <br/>

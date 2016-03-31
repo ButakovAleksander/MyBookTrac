@@ -5,6 +5,18 @@ from django.contrib.auth.models import User
 from django.utils import timezone
 
 
+class Settings(models.Model):
+
+    books_amount = models.CharField(max_length=20, default=10)
+    show_board = models.BooleanField(default=False)
+    show_cover = models.BooleanField(default=False)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+
+    def __str__(self):
+        settings = "{},{},{}".format(str(self.books_amount), str(self.show_board), str(self.show_cover))
+        return settings
+
+
 class Status(models.Model):
 
     status_text = models.CharField(max_length=100)
@@ -43,6 +55,3 @@ class Book(models.Model):
     def __str__(self):
         book_string = "{}, {}, {}, {}".format(self.title, self.author, self.genre, self.language)
         return book_string
-
-    def was_added_recently(self):
-        return self.date_pub >= timezone.now() - datetime.timedelta(days=1)

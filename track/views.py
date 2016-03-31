@@ -13,9 +13,8 @@ from django.contrib import auth
 from django.contrib.auth.views import login
 from django.db import IntegrityError
 
-from .models import Status, Book, Language, Genre
+from .models import Status, Book, Language, Genre, Settings
 
-from .utils.post_in_social_network import Recommender
 from .utils.search_book_info import get_book_info
 from .utils.search_for_author import get_author_info
 
@@ -115,7 +114,10 @@ def landing_page(request):
 
 def index(request, user_id):
 
-	if int(user_id) != request.user.id:
+	sh_board = Settings.objects.get(user_id=user_id).show_board
+
+	if int(user_id) != request.user.id and sh_board == False:
+
 		return HttpResponse("This user has forbidden to see his/her board. Return to your page.")
 		
 	else:
@@ -181,6 +183,44 @@ class AddBook(View):
 
 		return HttpResponseRedirect(reverse('track:index', args=(request.user.id,)))
 
+
+class BoardSettings(View):
+
+	def get(self, request, *args, **kwargs):
+
+		template = 'track/board_settings.html'
+		bks_amount = Settings.objects.get(user_id=request.user.id).books_amount
+		sh_board = Settings.objects.get(user_id=request.user.id).show_board
+		sh_cover = Settings.objects.get(user_id=request.user.id).show_cover
+
+		context = {'books_amount': bks_amount, 'show_board': sh_board, 'show_cover': sh_cover}
+
+		return render(request, template, context)
+
+
+	def post(self, request, *args, **kwargs):
+
+		if request.method == "POST":
+			setting = Settings.objects.get(user_id=request.user.id)
+			
+			# books_amount = request.POST.get("books_amount")
+			# setting.books_amount = books_amount
+
+			if request.POST.get('show_board'):
+				setting.show_board = True
+			else:
+				setting.show_board = False
+
+			if request.POST.get('show_cover'):
+				setting.show_cover = True
+			else:
+				setting.show_cover = False
+
+			setting.save()
+
+		return HttpResponseRedirect(reverse('track:index', args=(request.user.id,)))
+
+
 @csrf_exempt
 def change_status(request):
     
@@ -194,11 +234,11 @@ def change_status(request):
 	book.status_id = status_id
 	book.save()
 
-	if int(book.status_id) == Status.objects.all().filter(status_text="Recommend To Friends")[0].id:
+	# if int(book.status_id) == Status.objects.all().filter(status_text="Recommend To Friends")[0].id:
 
-		message = 'I recommend the book "{0}" from {1}'.format(book.title, book.author)
-		r = Recommender()
-		r.post_to_vk(message)
+	# 	message = 'I recommend the book "{0}" from {1}'.format(book.title, book.author)
+	# 	r = Recommender()
+	# 	r.post_to_vk(message)
 
 	# #return HttpResponseRedirect(reverse('track:index'))
 	return HttpResponse('')

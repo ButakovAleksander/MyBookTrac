@@ -19,41 +19,6 @@ from .utils.search_book_info import get_book_info
 from .utils.search_for_author import get_author_info
 
 
-class LogIn(View):
-
-	def get(self, request, *args, **kwargs):
-		if request.user.is_authenticated():
-			return HttpResponseRedirect(reverse('track:index', 
-												args=(request.user.id,)))
-
-		else:
-			template = 'track/login.html'
-			return render(request, template)
-
-	def post(self, request, *args, **kwargs):
-		
-		email = request.POST.get("email")
-		password = request.POST.get("password")
-		try:
-			username = User.objects.get(email=email)
-		except User.DoesNotExist:
-			return HttpResponse("There is no user with this email")
-
-		else:
-
-			user = auth.authenticate(username=username, password=password)
-			if user is not None:
-				if user.is_active:
-					auth.login(request, user)
-					return HttpResponseRedirect(reverse('track:index', 
-														args=(user.id,)))
-				else:
-					return HttpResponse("Your password is valid, but the account was disabled, \
-											please contact administrator.")
-			else:
-				return HttpResponse("Password is incorrect.")
-
-
 class SignUp(View):
 
 	def get(self, request, *args, **kwargs):
@@ -66,10 +31,10 @@ class SignUp(View):
 
 	def post(self, request, *args, **kwargs):
 
-		username = request.POST.get("username")
-		email = request.POST.get("email")
-		password = request.POST.get("password")
-		password2 = request.POST.get("password2")
+		username = request.POST.get("username").strip()
+		email = request.POST.get("email").strip()
+		password = request.POST.get("password").strip()
+		password2 = request.POST.get("password2").strip()
 
 		if password == password2:
 
@@ -92,6 +57,41 @@ class SignUp(View):
 													args=(user.id,)))
 		else:
 			return HttpResponse("Password confirmation is incorrect! Try again")
+
+
+class LogIn(View):
+
+	def get(self, request, *args, **kwargs):
+		if request.user.is_authenticated():
+			return HttpResponseRedirect(reverse('track:index', 
+												args=(request.user.id,)))
+
+		else:
+			template = 'track/login.html'
+			return render(request, template)
+
+	def post(self, request, *args, **kwargs):
+		
+		email = request.POST.get("email").strip()
+		password = request.POST.get("password").strip()
+		try:
+			username = User.objects.get(email=email)
+		except User.DoesNotExist:
+			return HttpResponse("User with this email does not exist")
+
+		else:
+
+			user = auth.authenticate(username=username, password=password)
+			if user is not None:
+				if user.is_active:
+					auth.login(request, user)
+					return HttpResponseRedirect(reverse('track:index', 
+														args=(user.id,)))
+				else:
+					return HttpResponse("Your password is valid, but the account was disabled, \
+											please contact administrator.")
+			else:
+				return HttpResponse("Password is incorrect.")
 
 
 def logout(request):
@@ -155,11 +155,12 @@ def index(request, user_id):
 class AddBook(View):
 
 	def get(self, request, *args, **kwargs):
-		# status = Status.objects.get(pk=status_id)
+
 		language_list = Language.objects.all()
 		genre_list = Genre.objects.all()
 		template = 'track/add_book.html'
 		context = {'language_list': language_list, 'genre_list': genre_list}
+		
 		return render(request, template, context)
 
 
@@ -171,7 +172,6 @@ class AddBook(View):
 		author = request.POST['author']
 		year = request.POST['year']
 		language_id = request.POST.get('language')
-
 		genre_id = request.POST.get('genre')
 		
 		book = status.book_set.create(

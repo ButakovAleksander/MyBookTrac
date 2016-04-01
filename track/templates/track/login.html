@@ -1,59 +1,64 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="utf-8">
-        <title>BOOKTRACK</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-	<style>
-    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
-    .row.content {height: 550px}
-    
-    /* Set gray background color and 100% height */
-    .sidenav {
-      background-color: #f1f1f1;
-      height: 100%;
-    }
-        
-    /* On small screens, set height to 'auto' for the grid */
-    @media screen and (max-width: 767px) {
-      .row.content {height: auto;} 
-    }
-	</style>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Sign in to MyBookTracker</title>
+  {% load staticfiles %}
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'track/dist/css/AdminLTE.min.css' %}">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="{% static 'track/dist/css/skins/_all-skins.min.css' %}">
 
-
-	</head>
-
-<body>
-
-<h1>Sign in</h1>
-
-<br/>
-
-<div class="row">
-<div class="col-sm-2"></div>
-
-	<div class="col-sm-8">
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
+</head>
+<body class="hold-transition login-page">
+<div class="container-fluid">
+<div class="login-box">
+  <div class="login-logo">
+    <a href="{% url 'track:login' %}"><b>MyBook</b>Tracker</a>
+  </div>
+  <!-- /.login-logo -->
+  <div class="login-box-body">
+    <p class="login-box-msg">Sign in to start see your books board</p>
+	
 	<form class="form" role='form' enctype="multipart/form-data" method="post" name='signin_form'>
 	{% csrf_token %}
-	<div class="form-group">
-		<label for="email">Email:</label>
-		<input type="text" class="form-control" id="email" name="email" autofocus>
+	<div class="form-group has-feedback">
+		<input type="text" class="form-control" id="email" name="email" placeholder="Email" autofocus>
+		<span class="glyphicon glyphicon-envelope form-control-feedback"></span>
 	  </div>
-	  <div class="form-group">
-		<label for="password">Password:</label>
-		<input type="password" class="form-control" id="password" name="password">
+	  <div class="form-group has-feedback">
+		<span class="glyphicon glyphicon-lock form-control-feedback"></span>
+		<input type="password" class="form-control" id="password" name="password" placeholder="Password">
 	  </div>
 	<div class="form-group">  
-	<input type="submit" value="Sign in"/>
+	<input class="btn btn-warning btn-block btn-flat" type="submit" value="Sign in"/>
 	</div>
 	</form>
 
-	</div>
-<div class="col-sm-2"></div>
-</div>
-</body>
+    New to MyBookTracker? <a class="text-center" href="{% url 'track:register' %}">Register a new membership</a>
 
+  </div>
+  <!-- /.login-box-body -->
+</div>
+<!-- /.login-box -->
+</div>
+
+
+</body>
 </html>

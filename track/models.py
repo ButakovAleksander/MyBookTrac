@@ -50,8 +50,17 @@ class Book(models.Model):
     language = models.ForeignKey(Language, on_delete=models.CASCADE)
     status = models.ForeignKey(Status, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
-    date_pub = models.DateTimeField('date published')
+    date_pub_created = models.DateTimeField('date published', editable=False, null=True)
+    date_pub_modified = models.DateTimeField('date published')
+
+    def save(self, *args, **kwargs):
+        ''' On save, update timestamps '''
+        if not self.id:
+            self.date_pub_created = timezone.now()
+        self.date_pub_modified = timezone.now()
+        return super(Book, self).save(*args, **kwargs)
 
     def __str__(self):
         book_string = "{}, {}, {}, {}".format(self.title, self.author, self.genre, self.language)
         return book_string
+

@@ -3,6 +3,7 @@
 import urllib.request
 import re
 import json
+import ssl
 from urllib.parse import quote_plus
 
 from .text_processor import TextProcessor
@@ -27,7 +28,17 @@ class InfoSearcher(object):
 
         query = self.build_query_string(title, author)
 
-        response = urllib.request.urlopen(query)
+        headers = {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:45.0) Gecko/20100101 Firefox/45.0'
+        }
+
+        context = ssl._create_unverified_context()
+
+        req = urllib.request.Request(query, headers=headers)
+
+        response = urllib.request.urlopen(req, context=context)
+
+        # response = urllib.request.urlopen(query)
         encoding = response.headers.get_content_charset()
         response = response.read().decode(encoding)
 

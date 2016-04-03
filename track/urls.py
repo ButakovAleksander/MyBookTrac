@@ -1,13 +1,13 @@
 from django.conf.urls import url
 
 from . import views
-from track.views import AddBook, LogIn, SignUp, BoardSettings
+from track.views import AddBook, SignIn, SignUp, BoardSettings
 
 app_name = 'track'
 urlpatterns = [
 	url(r'^$', views.landing_page, name='main'),
-	url(r'^login/$', LogIn.as_view(), name='login'),
-	url(r'^logout/$', views.logout, name='logout'),
+	url(r'^signin/$', SignIn.as_view(), name='signin'),
+	url(r'^signout/$', views.signout, name='signout'),
 	url(r'^register/$', SignUp.as_view(), name='register'),
     url(r'^user/(?P<user_id>[0-9]+)/$', views.index, name='index'),
     url(r'^add/$', AddBook.as_view(), name='create_book'),

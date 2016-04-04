@@ -51,6 +51,8 @@ class SignUp(View):
 
 					user.save()
 					user = auth.authenticate(username=username, password=password)
+
+					user.settings_set.create()
 					auth.login(request, user)
 
 					return HttpResponseRedirect(reverse('track:index', 
@@ -59,7 +61,7 @@ class SignUp(View):
 			return HttpResponse("Password confirmation is incorrect! Try again")
 
 
-class LogIn(View):
+class SignIn(View):
 
 	def get(self, request, *args, **kwargs):
 		if request.user.is_authenticated():
@@ -94,7 +96,7 @@ class LogIn(View):
 				return HttpResponse("Password is incorrect.")
 
 
-def logout(request):
+def signout(request):
 
 	auth.logout(request)
 
@@ -168,9 +170,9 @@ class AddBook(View):
 
 		status = Status.objects.get(pk=status_id)
 
-		title = request.POST['title']
-		author = request.POST['author']
-		year = request.POST['year']
+		title = request.POST['title'].strip()
+		author = request.POST['author'].strip()
+		year = request.POST['year'].strip()
 		language_id = request.POST.get('language')
 		genre_id = request.POST.get('genre')
 		

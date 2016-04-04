@@ -8,6 +8,7 @@
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   {% load staticfiles %}
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
@@ -56,10 +57,18 @@
   color:white;  
   }
   
-  <!-- .book {
-    background-image:url({% static 'track/cover.jpg' %});
-    background-size:100% 100%;
-  } -->
+  .book-cover {
+	height:50%;
+	width:100%;
+    background-image:url({% static 'track/images/book_cover1_smaller2.png' %});
+    background-size: contain;
+    background-repeat: no-repeat;
+	background-position: center;
+  }
+  
+  p {
+    font-size: 0.900em;
+	}
 
 	</style>
 	
@@ -106,7 +115,7 @@
 </script>
 </head>
 
-<body class="skin-blue layout-top-nav">
+<body class="hold-transition skin-blue layout-top-nav">
 
 {% if user.is_authenticated %}
 <div class="wrapper">
@@ -114,8 +123,9 @@
   <header class="main-header">
     <nav class="navbar navbar-static-top">
       <div class="container">
-        <div class="navbar-header">
+        <div class="navbar-header" style="padding:5px 0px 0px 0px">
           <a href="" class="navbar-brand">MyBooks<b>Tracker</b></a>
+		  <a class="w3-btn btn btn-warning" href="{% url 'track:create_book' %}" style="padding:10px 5px 10px 5px;border-radius: 0 !important;"  role="button">Add a new book</a>
         </div>
         
         <!-- Navbar Right Menu -->
@@ -127,14 +137,14 @@
               <!-- Menu Toggle Button -->
               <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                 <!-- The user image in the navbar-->
-                <!-- <img src="../../dist/img/user2-160x160.jpg" class="user-image" alt="User Image"> -->
+                <img src="{% static 'track/images/avatar.png' %}" class="user-image" alt="User Image">
                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
                 <span class="hidden-xs">Welcome, {{ user.username }}!</span>
               </a>
               <ul class="dropdown-menu">
                 <!-- The user image in the menu -->
                 <li class="user-header">
-                  <img src="../../dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                  <img src="{% static 'track/images/avatar.png' %}" class="img-circle" alt="User Image">
 
                   <p>
                     {{ user.username }}
@@ -145,14 +155,11 @@
                 
                 <!-- Menu Footer-->
                 <div class="row">
-                  <div class="col-sm-4">
-                    <a href="#" class="btn btn-default btn-flat">Profile</a>
-                  </div>
 				  <div  class="col-sm-4">
                     <a href="{% url 'track:change_settings' user.id %}" class="btn btn-default btn-flat">Board Settings</a>
                   </div>
                   <div  class="col-sm-4">
-                    <a href="{% url 'track:logout' %}" class="btn btn-default btn-flat">Sign out</a>
+                    <a href="{% url 'track:signout' %}" class="btn btn-default btn-flat">Sign out</a>
                   </div>
                 </div>
 				<div class="row"></div>
@@ -167,11 +174,11 @@
   </header>
 
   {% if books_list %}
-<div class="container-fluid" style="height:99%">
+<div class="container-fluid content-wrapper" style="height:99%">
 	<div class="container" style="height:100%;">
 		
 		<!-- Content Header (Page header) -->
-	  <section class="content-header version">
+	  <section class="content-header">
 	  
 		<h1>
 		  Books Board
@@ -186,7 +193,7 @@
 	  <br/>
 	
 	<!-- Main content -->
-    <section class="content well" style="height:85%;overflow:auto;">
+    <section class="content" style="height:85%;overflow:auto;background-color:#313F45;border-radius: 0 !important;">
 	<div class="row" style="height:99%;">
 
 	{% for status, books in books_list.items %}
@@ -201,23 +208,40 @@
 			<div class="box box-solid box-default" style="height:100%;">
 			{% endif %}
 			  <div class="box-header with-border">
-				<h3 class="box-title">{{ status.status_text }}</h3>
+				<h3 class="box-title">({{ books|length }}) {{ status.status_text }}</h3>
 				
 			  </div><!-- /.box-header -->
-			  <div class="box-body column sortable" id="status_{{status.id}}" style="height:93%;overflow-y:scroll;overflow-x:hidden;">
-				{% if status.id == 1 %}
-				<p><a href="{% url 'track:create_book' %}" class="btn btn-default" role="button">Add a new book</a></p>
-				{% elif books|length == 0 %}
-				<p>Drag&Drop a book here to change its status</p>
+			  <div class="box-body column sortable" id="status_{{status.id}}" style="height:92%;overflow-y:scroll;overflow-x:hidden;">
+				{% if books|length == 0 %}
+					{% if status.id == 1%}
+					<p>Click Add a new book button to start using the board</p>
+					{% else %}
+					<p>Drag&Drop a book here to change its status</p>
+					{% endif %}
 				{% endif %}
 				
 				{% for book in books %}			
-				<div class="well" style="box-shadow:1px 5px 10px gray" id="book_{{book.id}}">
-					<div class="header"><b><a href="{% url 'track:details' book.id %}">{{ book.title }}</a></b></div>
-					<div class="content1"><p>Author: {{ book.author }}</p><p>Year: {{ book.year }}</p><p>Genre: {{ book.genre }}</p><p>Language: {{ book.language }}</p><p>Added at: {{book.date_pub|date:"d M Y, H:i"}}</p>
+				<div class="book-cover" style="text-align:center" id="book_{{book.id}}">
+					<div class="row">&nbsp;</div>
+					
+					<div class="row header">
+					<div class="col-sm-1"></div>
+					
+					<div class="col-sm-9 content1" style="text-align:center">
+					
+					<div class=""><p><b><a href="{% url 'track:details' book.id %}">{{ book.title }}</a></b></p></div>
+					<div class=""><p style="align:center">{{ book.author }}</p><p>{{book.date_pub_created|date:"d M Y, H:i"}}</p>
 					<p><a href="{% url 'track:delete_book' book.id %}" class="btn btn-default" role="button">delete</a></p>
+					<p>{{ book.year }}</p>
 					</div>
+					
+					</div>
+					
+					<div class="col-sm-2"></div>
+					</div>
+					
 				</div>
+				
 				{% endfor %}
 							
 			  </div>
@@ -248,7 +272,7 @@
   
 {% else %}
 	<div>You should be logged in to view your books</div>
-    <div><p><a href="{% url 'track:register' %}">Register</a></p><p><a href="{% url 'track:login' %}">Login</a></p></div>
+    <div><p><a href="{% url 'track:register' %}">Register</a></p><p><a href="{% url 'track:signin' %}">Login</a></p></div>
 {% endif %}
 </div> <!-- End Wrapper-->
 

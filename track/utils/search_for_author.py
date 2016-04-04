@@ -3,6 +3,7 @@
 import urllib.request
 import re
 import json
+import ssl
 # import io
 import wikipedia
 
@@ -88,9 +89,11 @@ class PhotoSearcher(object):
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.9; rv:45.0) Gecko/20100101 Firefox/45.0'
         }
 
+        context = ssl._create_unverified_context()
+
         req = urllib.request.Request(query, headers=headers)
 
-        response = urllib.request.urlopen(req)
+        response = urllib.request.urlopen(req, context=context)
         encoding = response.headers.get_content_charset()
         response = response.read().decode(encoding)
 

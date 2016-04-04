@@ -6,6 +6,7 @@
   <title>Sign in to MyBookTracker</title>
   {% load staticfiles %}
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
@@ -30,7 +31,7 @@
 <div class="container-fluid">
 <div class="login-box">
   <div class="login-logo">
-    <a href="{% url 'track:login' %}"><b>MyBook</b>Tracker</a>
+    <a href="{% url 'track:main' %}"><b>MyBook</b>Tracker</a>
   </div>
   <!-- /.login-logo -->
   <div class="login-box-body">
@@ -46,12 +47,12 @@
 		<span class="glyphicon glyphicon-lock form-control-feedback"></span>
 		<input type="password" class="form-control" id="password" name="password" placeholder="Password">
 	  </div>
-	<div class="form-group">  
-	<input class="btn btn-warning btn-block btn-flat" type="submit" value="Sign in"/>
+	<div class="form-group has-feedback">  
+	<input class="w3-btn btn-warning btn-block btn-flat" type="submit" value="Sign in"/>
 	</div>
 	</form>
 
-    New to MyBookTracker? <a class="text-center" href="{% url 'track:register' %}">Register a new membership</a>
+    New to MyBookTracker? <a class="text-center" href="{% url 'track:register' %}">Register a new account</a>
 
   </div>
   <!-- /.login-box-body -->

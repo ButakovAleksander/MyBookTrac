@@ -8,7 +8,7 @@
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   {% load staticfiles %}
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-  <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+  <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">  
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
@@ -70,6 +70,7 @@
     font-size: 0.900em;
 	}
 
+	
 	</style>
 	
 <script type="text/javascript">
@@ -83,8 +84,7 @@
       handle: ".header, .content1",
 	  containment: ".container-fluid",
 	  cursor: "move",
-	  <!-- cursorAt: { top: 1, left: 1 }, -->
-	  delay: 100,
+	  delay: 50,
 	  opacity: 0.7,
 	  revert: 350,
 	  tolerance: "pointer",
@@ -96,6 +96,19 @@
       stop: function (event, ui) {
         ui.item.removeClass('tilt');
       },
+	  change: function (event, ui){
+		var book_id = ui.item.attr("id");
+		var status_id = event.target.id;
+		var ids = { s_id : status_id, b_id : book_id }
+
+		$.ajax({
+		  url: "{% url 'track:change_status' %}",
+		  method: "POST",
+		  data: ids,
+		  contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+		  processData: true,
+		  });
+	  },
 	  receive: function (event, ui){
 		var book_id = ui.item.attr("id");
 		var status_id = event.target.id;
@@ -124,7 +137,7 @@
     <nav class="navbar navbar-static-top">
       <div class="container">
         <div class="navbar-header" style="padding:5px 0px 0px 0px">
-          <a href="" class="navbar-brand">MyBooks<b>Tracker</b></a>
+          <a href="{% url 'track:main' %}" class="navbar-brand">MyBooks<b>Tracker</b></a>
 		  <a class="w3-btn btn btn-warning" href="{% url 'track:create_book' %}" style="padding:10px 5px 10px 5px;border-radius: 0 !important;"  role="button">Add a new book</a>
         </div>
         
@@ -190,14 +203,13 @@
 		</ol>
 	  
 	  </section>
-	  <br/>
 	
 	<!-- Main content -->
-    <section class="content" style="height:85%;overflow:auto;background-color:#313F45;border-radius: 0 !important;">
+    <section class="content" style="height:85%;overflow:auto;">
 	<div class="row" style="height:99%;">
 
 	{% for status, books in books_list.items %}
-		<div class="col-md-{% widthratio 12 books_list|length 1 %}" style="height:100%;">
+		<div class="col-md-{% widthratio 12 books_list|length 1 %}" style="height:100%;padding:0 10px 0 0">
             {% if status.id == 1 %}
 			<div class="box box-solid box-warning" style="height:100%;">
 			{% elif status.id == 2 %}
@@ -220,27 +232,35 @@
 					{% endif %}
 				{% endif %}
 				
-				{% for book in books %}			
-				<div class="book-cover" style="text-align:center" id="book_{{book.id}}">
-					<div class="row">&nbsp;</div>
-					
-					<div class="row header">
+				{% for book in books %}
+				
+				<!-- <div class="" style="width:100%;"> -->
+				<div class="" style="text-align:center;" id="book_{{book.id}}">
+										
+					<div class="row" >
 					<div class="col-sm-1"></div>
 					
-					<div class="col-sm-9 content1" style="text-align:center">
+					<div class="well col-sm-8" style="background-color:#e2e6e9;box-shadow: 10px 5px 5px #b3b3b3;">
 					
-					<div class=""><p><b><a href="{% url 'track:details' book.id %}">{{ book.title }}</a></b></p></div>
-					<div class=""><p style="align:center">{{ book.author }}</p><p>{{book.date_pub_created|date:"d M Y, H:i"}}</p>
-					<p><a href="{% url 'track:delete_book' book.id %}" class="btn btn-default" role="button">delete</a></p>
+					
+					<div class="header" ><p>{{ book.author }}</p></div>
+					
+					
+					<div class="content1"><p style="align:center"><b><a href="{% url 'track:details' book.id %}">{{ book.title }}</a></b></p><br/><br/>
+										
 					<p>{{ book.year }}</p>
-					</div>
 					
 					</div>
 					
-					<div class="col-sm-2"></div>
+					</div>
+					<div class="col-sm-2">
+					<p><a href="{% url 'track:delete_book' book.id %}" class="btn btn-default" role="button">x</a></p>
+					</div>
+					
 					</div>
 					
 				</div>
+				<!-- </div> -->				
 				
 				{% endfor %}
 							
@@ -282,6 +302,7 @@
 <script src="{% static 'track/plugins/fastclick/fastclick.js' %}"></script>
 <!-- AdminLTE App -->
 <script src="{% static 'track/dist/js/app.min.js' %}"></script>
+
 
 </body>
 

@@ -132,7 +132,7 @@ def index(request, user_id):
 			return HttpResponse(response)
 
 		else:
-			books = user.book_set.all()
+			books = user.book_set.order_by('-date_pub_modified')
 			status_list = Status.objects.all()
 			
 			books_list = {status:[] for status in status_list}
@@ -227,6 +227,8 @@ class BoardSettings(View):
 def change_status(request):
     
 	data = QueryDict(request.body)
+	print('STATUS: ', data['s_id'])
+	print('BOOK: ', data['b_id'])
 	book_id_str = data['b_id']
 	status_id_str = data['s_id']
 	book_id = book_id_str[book_id_str.find('_')+1:]

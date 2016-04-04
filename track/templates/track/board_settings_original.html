@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>{{ user.username }} Board Settings</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+	<style>
+    /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
+    .row.content {height: 550px}
+    
+    /* Set gray background color and 100% height */
+    .sidenav {
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+        
+    /* On small screens, set height to 'auto' for the grid */
+    @media screen and (max-width: 767px) {
+      .row.content {height: auto;} 
+    }
+	</style>
+	</head>
+
+<body>
+<br/>
+<div class="container-fluid">
+
+<div class="well">
+
+	<div class="row">
+		<div class="col-sm-2"></div>
+		{% if user.is_authenticated %}
+			<div class="col-sm-8">
+			<h3><b>My board settings</b></h3>
+			<form class="form" role='form' enctype="multipart/form-data" method="post" name='user_settings'>
+			{% csrf_token %}
+			<div class="form-group">
+				<label for="books_amount">Number of book on the board:</label>
+				<input type="text" class="form-control" id="books_amount" name="books_amount" placeholder="{{ books_amount }}" disabled>
+			  </div>
+			 <div class="form-group">
+			  <div class="checkbox">
+				<label for="show_board">
+				<input type="checkbox" name="show_board" value="show_board" {% if show_board %}checked{% endif %} />
+				Show my board to other users:
+				</label>
+			  </div>
+			  <div class="checkbox disabled">
+				<label for="show_board">
+				<input type="checkbox" name="show_cover" value="show_cover" disabled />
+				Show book's cover on the board:
+				</label>
+			  </div>
+			 </div>
+			  
+			<input type="submit" value="Save"/>
+			</form>
+		{% else %}
+			<p>You should be logged in to change_settings!</p>
+		{% endif %}
+			</div>
+		<div class="col-sm-2"></div>
+	</div>
+
+</div>
+
+</div>
+
+</body>
+
+</html>

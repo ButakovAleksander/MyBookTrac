@@ -4,9 +4,28 @@
         <meta charset="utf-8">
         <title>BOOKTRACK</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
-		<script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+		{% load staticfiles %}
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <!-- Ionicons -->
+  <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
+  <!-- Theme style -->
+  <link rel="stylesheet" href="{% static 'track/dist/css/AdminLTE.min.css' %}">
+  <!-- AdminLTE Skins. Choose a skin from the css/skins
+       folder instead of downloading all of them to reduce the load. -->
+  <link rel="stylesheet" href="{% static 'track/dist/css/skins/_all-skins.min.css' %}">
+
+  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 9]>
+  <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+  <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+  <![endif]-->
 	<style>
     /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
     .row.content {height: 550px}
@@ -23,61 +42,153 @@
     }
 	</style>
 
-
 	</head>
 
-<body>
+<body class="skin-blue layout-top-nav">
 
-<h1>Add A Book</h1>
+<div class="wrapper">
 
-{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-<br/>
-<p><a href="{% url 'track:main' %}">Back to main page</a></p>
-<br/>
-<div class="row">
-<div class="col-sm-2"></div>
-{% if user.is_authenticated %}
-	<div class="col-sm-8">
-	<form class="form" role='form' enctype="multipart/form-data" method="post" name='add_form'>
-	{% csrf_token %}
-	<div class="form-group">
-		<label for="title">Title of the book:</label>
-		<input type="text" class="form-control" id="title" name="title" placeholder="Book's title" autofocus>
-	  </div>
-	  <div class="form-group">
-		<label for="author">Author:</label>
-		<input type="text" class="form-control" id="author" name="author">
-	  </div>
-	  <div class="form-group">
-		<label for="year">Year:</label>
-		<input type="text" class="form-control" id="year" name="year">
-	  </div>
-	  <div class="form-group">
-		<label for="language" class="control-label">Language:</label>
-		  <select class="form-control" id="language" name="language">
-			<option value=""></option>
-		  {% for lang in language_list %}
-			<option value="{{lang.id}}">{{lang.language}}</option>
-		  {% endfor %}
-		  </select>
-	  </div>
-	  <div class="form-group">
-		<label for="genre" class="control-label">Genre:</label>
-			<select class="form-control" id="genre" name="genre">
-				<option value=""></option>
-		  {% for gen in genre_list %}
-				<option value="{{gen.id}}">{{gen.genre}}</option>
-		  {% endfor %}
-		  </select>
-	  </div>
-	<input type="submit" value="Add Book"/>
-	</form>
-{% else %}
-    <p>You should be logged in to add books!</p>
-{% endif %}
-	</div>
-<div class="col-sm-2"></div>
-</div>
+	<header class="main-header">
+    <nav class="navbar navbar-static-top">
+      <div class="container">
+        <div class="navbar-header" style="padding:5px 0px 0px 0px">
+          <a href="{% url 'track:main' %}" class="navbar-brand">MyBooks<b>Tracker</b></a>
+		  <a class="w3-btn btn btn-warning" href="{% url 'track:create_book' %}" style="padding:10px 5px 10px 5px;border-radius: 0 !important;"  role="button">Add a new book</a>
+        </div>
+        
+        <!-- Navbar Right Menu -->
+        <div class="navbar-custom-menu">
+          <ul class="nav navbar-nav">
+
+            <!-- User Account Menu -->
+            <li class="dropdown user user-menu">
+              <!-- Menu Toggle Button -->
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                <!-- The user image in the navbar-->
+                <img src="{% static 'track/images/avatar.png' %}" class="user-image" alt="User Image">
+                <!-- hidden-xs hides the username on small devices so only the image appears. -->
+                <span class="hidden-xs">Welcome, {{ user.username }}!</span>
+              </a>
+              <ul class="dropdown-menu">
+                <!-- The user image in the menu -->
+                <li class="user-header">
+                  <img src="{% static 'track/images/avatar.png' %}" class="img-circle" alt="User Image">
+
+                  <p>
+                    {{ user.username }}
+                    <small>Member since {{user.date_joined|date:"d M Y"}}</small>
+                  </p>
+                </li>
+                <!-- Menu Body -->
+                
+                <!-- Menu Footer-->
+                <div class="row">
+                  
+				  <div  class="col-sm-4">
+                    <a href="{% url 'track:change_settings' user.id %}" class="btn btn-default btn-flat">User Profile</a>
+                  </div>
+				  <div  class="col-sm-4">
+                    <a href="{% url 'track:index' user.id %}" class="btn btn-default btn-flat">Books Board</a>
+                  </div>
+                  <div  class="col-sm-4">
+                    <a href="{% url 'track:signout' %}" class="btn btn-default btn-flat">Sign out</a>
+                  </div>
+                </div>
+				<div class="row"></div>
+              </ul>
+            </li>
+          </ul>
+        </div>
+        <!-- /.navbar-custom-menu -->
+      </div>
+      <!-- /.container-fluid -->
+    </nav>
+	</header>
+
+	<div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+          <h1>
+            Add A Book
+          </h1>
+          <ol class="breadcrumb">
+            <li><a href="{% url 'track:main' %}"<i class=""></i> Home</a></li>
+            <li><a href="{% url 'track:main' %}">Book Board </a></li>
+            <li class="active">Add A Book</li>
+          </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+		
+		<div class="row">
+		<div class="col-sm-2"></div>
+		{% if user.is_authenticated %}
+			<div class="col-sm-8">
+			<form class="form" role='form' enctype="multipart/form-data" method="post" name='add_form' data-toggle="validator">
+			{% csrf_token %}
+			<div class="form-group has-feedback">
+				<input type="text" class="form-control" id="title" name="title" placeholder="Title" data-error="This field can't be empty" autofocus required>
+				<span class="glyphicon glyphicon-pencil form-control-feedback"></span>
+				<div class="help-block with-errors"></div>
+			  </div>
+			  <div class="form-group has-feedback">
+				<input type="text" class="form-control" id="author" name="author" data-error="Add a full name or just a surname" placeholder="Author" required>
+				<span class="glyphicon glyphicon-user form-control-feedback"></span>
+				<div class="help-block with-errors"></div>
+			  </div>
+			  <div class="form-group has-feedback">
+				<input type="text" class="form-control" id="year" name="year" pattern="^[0-9]{1,}$" data-minlength="4" maxlength="4" data-error="Example: 1987" placeholder="Year of publication">
+				<span class="glyphicon glyphicon-time form-control-feedback"></span>
+				<div class="help-block with-errors"></div>
+			  </div>
+			  <div class="form-group has-feedback">
+				
+				<select class="form-control" id="language" name="language" data-error="Select a language" required="required">
+					<option value="" disabled selected>Language</option>
+				  {% for lang in language_list %}
+					<option value="{{lang.id}}">{{lang.language}}</option>
+				  {% endfor %}
+				</select>
+				<div class="help-block with-errors"></div>
+			  </div>
+			  <div class="form-group has-feedback">
+				
+				<select class="form-control" id="genre" name="genre">
+						<option value="" disabled selected>Genre</option>
+				  {% for gen in genre_list %}
+						<option value="{{gen.id}}" requred>{{gen.genre}}</option>
+				  {% endfor %}
+				</select>
+			  </div>
+			<input type="submit" value="Add Book" id="sbmt"/>
+			</form>
+		{% else %}
+			<p>You should be logged in to add books!</p>
+		{% endif %}
+			</div>
+		<div class="col-sm-2"></div>
+		</div>
+		
+		</section>
+	
+	</div> <!-- content-wrapper -->
+
+
+<footer class="main-footer">
+    <div class="container">
+      
+      <strong>Copyright &copy; </strong> All rights reserved.
+    </div>
+    <!-- /.container -->
+  </footer>
+
+
+</div> <!-- Wrapper -->
+
+<script src="{% static 'track/dist/js/validator.min.js' %}"></script>
 </body>
 
 </html>
+<!-- https://help.pythonanywhere.com/pages/VirtualEnvForNewerDjango -->
+<!-- https://help.pythonanywhere.com/pages/FollowingTheDjangoTutorial -->

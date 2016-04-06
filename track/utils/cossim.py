@@ -24,11 +24,6 @@ class SimilarityFinder(object):
             total_cossim = cossim_title + cossim_author
             result_dict[book_item] = total_cossim
 
-            # print()
-            # print('a',item_dicts[1])
-            # print('t', item_dicts[0])
-            # print('c', total_cossim)
-            
         relevant_book = sorted(((book, cos) for book, cos in result_dict.items()), 
                                     key=lambda x: x[1], reverse=True)[0]
 
@@ -69,7 +64,6 @@ class SimilarityFinder(object):
     @staticmethod
     def cosine_similarity(query_dict, response_dict):
         """
-        Вычисление косинусного коэффициента
         https://en.wikipedia.org/wiki/Cosine_similarity
         """
 

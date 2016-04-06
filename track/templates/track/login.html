@@ -37,15 +37,17 @@
   <div class="login-box-body">
     <p class="login-box-msg">Sign in to start see your books board</p>
 	
-	<form class="form" role='form' enctype="multipart/form-data" method="post" name='signin_form'>
+	<form class="form" role='form' enctype="multipart/form-data" method="post" name='signin_form' data-toggle="validator">
 	{% csrf_token %}
 	<div class="form-group has-feedback">
-		<input type="text" class="form-control" id="email" name="email" placeholder="Email" autofocus>
+		<input type="email" class="form-control" id="email" name="email" placeholder="Email" pattern='^(([^<>()\[\]\\.,;:\s@\"]+(\.[^<>()\[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$' data-error="Enter a valid email" autofocus required>
 		<span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+		<div class="help-block with-errors"></div>
 	  </div>
 	  <div class="form-group has-feedback">
 		<span class="glyphicon glyphicon-lock form-control-feedback"></span>
-		<input type="password" class="form-control" id="password" name="password" placeholder="Password">
+		<input type="password" class="form-control" id="password" name="password" placeholder="Password" data-error="You forgot about the password" autofocus required>
+		<div class="help-block with-errors"></div>
 	  </div>
 	<div class="form-group has-feedback">  
 	<input class="w3-btn btn-warning btn-block btn-flat" type="submit" value="Sign in"/>
@@ -60,6 +62,6 @@
 <!-- /.login-box -->
 </div>
 
-
+<script src="{% static 'track/dist/js/validator.min.js' %}"></script>
 </body>
 </html>

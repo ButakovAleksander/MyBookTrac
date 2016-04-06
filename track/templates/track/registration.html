@@ -37,23 +37,27 @@
   <div class="register-box-body">
     <p class="login-box-msg">Register a new account</p>
 	
-	<form class="form" role='form' enctype="multipart/form-data" method="post" name='registration_form'>
+	<form class="form" role='form' enctype="multipart/form-data" method="post" name='registration_form' data-toggle="validator">
 	{% csrf_token %}
 	<div class="form-group has-feedback">
-		<input type="text" class="form-control" id="username" name="username" placeholder="User name" autofocus>
+		<input type="text" class="form-control" id="username" name="username" placeholder="User name" data-error="Enter a username" autofocus required>
 		<span class="glyphicon glyphicon-user form-control-feedback"></span>
+		<div class="help-block with-errors"></div>
 	</div>
 	<div class="form-group has-feedback">
-		<input type="text" class="form-control" id="email" name="email" placeholder="Email">
+		<input type="email" class="form-control" id="email" name="email" placeholder="Email" pattern='^(([^<>()\[\]\\.,;:\s@\"]+(\.[^<>()\[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$' data-error="Enter a valid email" autofocus required>
 		<span class="glyphicon glyphicon-envelope form-control-feedback"></span>
+		<div class="help-block with-errors"></div>
 	</div>
 	  <div class="form-group has-feedback">
-		<input type="password" class="form-control" id="password" name="password" placeholder="Password">
-		<span class="glyphicon glyphicon-lock form-control-feedback"></span>
+		<input type="password" class="form-control" id="password" name="password" placeholder="Password" data-minlength="6" required>
+		<div class="help-block">Minimum of 6 characters</div>
+		<div class="help-block with-errors"></div>
 	  </div>
 	<div class="form-group has-feedback">
-		<input type="password" class="form-control" id="password2" name="password2" placeholder="Retype password">
+		<input type="password" class="form-control" id="password2" name="password2" placeholder="Retype password" data-match="#password" data-match-error="Whoops, this doesn't match the password" required>
 		<span class="glyphicon glyphicon-log-in form-control-feedback"></span>
+		<div class="help-block with-errors"></div>
 	  </div>
 	<div class="form-group has-feedback">  
 	<input type="submit" class="w3-btn btn-primary btn-block btn-flat" value="Sign up"/>
@@ -65,6 +69,7 @@
   <!-- /.form-box -->
 </div>
 <!-- /.register-box -->
+<script src="{% static 'track/dist/js/validator.min.js' %}"></script>
 
 </body>
 </html>

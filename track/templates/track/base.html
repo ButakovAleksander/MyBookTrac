@@ -169,7 +169,7 @@
                 <!-- Menu Footer-->
                 <div class="row">
 				  <div  class="col-sm-4">
-                    <a href="{% url 'track:change_settings' user.id %}" class="btn btn-default btn-flat">Board Settings</a>
+                    <a href="{% url 'track:change_settings' user.id %}" class="btn btn-default btn-flat">User Profile</a>
                   </div>
                   <div  class="col-sm-4">
                     <a href="{% url 'track:signout' %}" class="btn btn-default btn-flat">Sign out</a>
@@ -223,7 +223,7 @@
 				<h3 class="box-title">({{ books|length }}) {{ status.status_text }}</h3>
 				
 			  </div><!-- /.box-header -->
-			  <div class="box-body column sortable" id="status_{{status.id}}" style="height:92%;overflow-y:scroll;overflow-x:hidden;">
+			  <div class="box-body column sortable" id="status_{{status.id}}" style="height:90%;overflow-y:scroll;overflow-x:hidden;">
 				{% if books|length == 0 %}
 					{% if status.id == 1%}
 					<p>Click Add a new book button to start using the board</p>

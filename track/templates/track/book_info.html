@@ -95,7 +95,10 @@
                 <div class="row">
                   
 				  <div  class="col-sm-4">
-                    <a href="{% url 'track:change_settings' user.id %}" class="btn btn-default btn-flat">Board Settings</a>
+                    <a href="{% url 'track:change_settings' user.id %}" class="btn btn-default btn-flat">User Profile</a>
+                  </div>
+				  <div  class="col-sm-4">
+                    <a href="{% url 'track:index' user.id %}" class="btn btn-default btn-flat">Books Board</a>
                   </div>
                   <div  class="col-sm-4">
                     <a href="{% url 'track:signout' %}" class="btn btn-default btn-flat">Sign out</a>
@@ -146,9 +149,9 @@
 					<p><b>Language:</b> {{ book.language }}</p>
 					<p><b>Book added:</b> {{ book.date_pub_created }}</p>
 					{% if book.status_id == 1 %}
-					<p><b>Status:</b> "You planned this book for reading."</p>
+					<p><b>Status:</b> "You've planned this book for reading."</p>
 					{% elif book.status_id == 2 %}
-					<p><b>Status:</b> "You're reading this book currently."</p>
+					<p><b>Status:</b> "You're currently reading this book."</p>
 					{% elif book.status_id == 3 %}
 					<p><b>Status:</b> "You've read this book already."</p>
 					{% endif %}

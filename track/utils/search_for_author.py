@@ -4,18 +4,20 @@ import urllib.request
 import re
 import json
 import ssl
-# import io
 import wikipedia
 
-# from lxml import etree
 from urllib.parse import quote_plus
 
 from .text_processor import TextProcessor
 
-# https://wikipedia.readthedocs.org/en/latest/code.html
-
 
 class AuthorSearcher(object):
+
+    """
+    Find some info about the author in wikipedia.
+    The returned bio is language dependant.
+    Uses the language given for a book.
+    """
 
     def __init__(self):
         
@@ -27,7 +29,15 @@ class AuthorSearcher(object):
                 'French': 'fr',
                 'Italian': 'it',
                 'Portuguese': 'pt',
-                'Arabic': 'ar'
+                'Arabic': 'ar',
+                'Polish': 'pl',
+                'Dutch': 'nl',
+                'Chinese': 'zh',
+                'Hindi/Urdu': 'hi',
+                'Japanese': 'ja',
+                'Bengali': 'bn',
+                'Korean': 'ko',
+                'Finnish': 'fi'
         }
 
     def find_author_in_wiki(self, author, language):
@@ -43,11 +53,7 @@ class AuthorSearcher(object):
         else:
             suggested_author = author
         
-        # search_results = wikipedia.search(suggested_author)
-
-        # if not search_results:
-        #     return None
-
+        
         w_author = suggested_author
 
         try:
@@ -55,19 +61,17 @@ class AuthorSearcher(object):
         except (wikipedia.exceptions.DisambiguationError):
             return None
 
-        # author_page = wikipedia.WikipediaPage(title=w_author)
-        # author_photo = author_page.images[0]
-
-
+        
         return author_bio
 
 
 class PhotoSearcher(object):
 
+    """
+    Find a photo for the author in Google Images.
+    """
 
     GOOGLE_IMAGES_API = 'https://www.google.com/search?site=&tbm=isch&q='
-
-    CLASS_WITH_IMAGE = "//*[re:test(@class, 'rg_meta', 'i')]"
     RG_META = re.compile(r'<div\s+class=\"rg_meta\">(.*?)</div>')
 
     def __init__(self):
@@ -78,9 +82,7 @@ class PhotoSearcher(object):
         query = self._build_query_string(author)
         response = self._load_images(query)
         photo = self._find_first_image(response)
-        # htree = self._parse_html(response)
-        # photo = self._find_first_image(htree)
-
+        
         return photo
 
     def _load_images(self, query):
@@ -99,25 +101,11 @@ class PhotoSearcher(object):
 
         return response
 
-    # def _parse_html(self, response):
-
-    #     # инициализируем парсер
-    #     hparser = etree.HTMLParser(encoding='utf-8')
-    #     htree = etree.parse(io.StringIO(response), hparser)
-
-    #     return htree
-
     def _find_first_image(self, htree):
 
         rg_meta_div = self.RG_META.search(htree).group(1)
         image_meta = json.loads(rg_meta_div)
         image_link = image_meta["ou"]
-
-        # images_meta = htree.xpath(self.CLASS_WITH_IMAGE, namespaces={"re": "http://exslt.org/regular-expressions"})
-        
-        # first_image_node = json.loads(images_meta[0].text)
-
-        # image_link = first_image_node["ou"]
 
         return image_link
 

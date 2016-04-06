@@ -17,6 +17,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 urlpatterns = [
-    url(r'^books/', include('track.urls')),
+	url(r'^', include('track.urls')),
+    # url(r'^books/', include('track.urls')),
     url(r'^admin/', admin.site.urls),
 ]

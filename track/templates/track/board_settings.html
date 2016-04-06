@@ -56,7 +56,7 @@
 
 <body class="skin-blue layout-top-nav">
 
-<div class="wrapper">
+<div class="wrapper2">
 
   <header class="main-header">
     <nav class="navbar navbar-static-top">
@@ -95,7 +95,10 @@
                 <div class="row">
                   
 				  <div  class="col-sm-4">
-                    <a href="{% url 'track:change_settings' user.id %}" class="btn btn-default btn-flat">Board Settings</a>
+                    <a href="{% url 'track:change_settings' user.id %}" class="btn btn-default btn-flat">User Profile</a>
+                  </div>
+				  <div  class="col-sm-4">
+                    <a href="{% url 'track:index' user.id %}" class="btn btn-default btn-flat">Books Board</a>
                   </div>
                   <div  class="col-sm-4">
                     <a href="{% url 'track:signout' %}" class="btn btn-default btn-flat">Sign out</a>
@@ -137,6 +140,13 @@
                   <img class="profile-user-img img-responsive img-circle" src="{% static 'track/images/avatar.png' %}" alt="User profile picture">
                   <h3 class="profile-username text-center" style="text-transform:uppercase">{{ user.username }}</h3>
                   <p class="text-muted text-center">Occupation</p>
+				  
+				  <ul class="list-group list-group-unbordered">
+                    <li class="list-group-item">
+                      <b>My Books</b> <a class="pull-right">{{ user.book_set.all|length }}</a>
+                    </li>
+                    
+                  </ul>
 
                 </div><!-- /.box-body -->
               </div><!-- /.box -->
@@ -144,18 +154,26 @@
               <!-- About Me Box -->
               <div class="box box-primary">
                 <div class="box-header with-border">
-                  <h3 class="box-title">About Me</h3>
+                  <h3 class="box-title">Statistics</h3>
                 </div><!-- /.box-header -->
                 <div class="box-body">
-                  <strong><i class="fa fa-book margin-r-5"></i>  Education</strong>
-                  <p class="text-muted">
-                    
-                  </p>
+                  <strong><i class="fa fa-book margin-r-5"></i>My favorite languages</strong>
+                  <p class="text-muted"></p>
 
                   <hr>
 
-                  <strong><i class="fa fa-map-marker margin-r-5"></i> Location</strong>
-                  <p class="text-muted"></p>
+                  <strong><i class="glyphicon glyphicon-star margin-r-5"></i>My favorite genres</strong>
+                  {% if fav_genres|length == 0 %}
+                  <p class="text-muted">You haven't add any books yet.</p>
+                  {% else %}
+				  <ul class="list-group list-group-unbordered">
+                    {% for fav_gen in fav_genres %}
+					<li class="list-group-item">
+                      <b>{{ fav_gen.0 }}</b> <a class="pull-right">{{ fav_gen.1 }}</a>
+                    </li>
+                    {% endfor %}
+                  </ul>
+                  {% endif %}
 
                   <hr>
 
@@ -163,8 +181,15 @@
               </div><!-- /.box -->
             </div><!-- /.col -->
 			
-			<div class="col-md-9">
-				<form class="form" role='form' enctype="multipart/form-data" method="post" name='user_settings'>
+			<div class="col-md-7">
+			
+			<div class="box box-solid">
+                <div class="box-header with-border">
+                  <i class="fa"></i>
+                  <h3 class="box-title">Board Settings</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+					<form class="form" role='form' enctype="multipart/form-data" method="post" name='user_settings'>
 			{% csrf_token %}
 			<div class="form-group">
 				<div class="col-sm-5">
@@ -191,8 +216,12 @@
 			  
 			 </div>
 			  
-			</form>			
+			</form>
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
+						
 			</div>
+			<div class="col-md-2"></div>
 			
 			{% else %}
 			<p>You should be <a href="{% url 'track:signin' %}">signed in</a> to change_settings!</p>

@@ -67,22 +67,40 @@ class AuthorSearcher(object):
 
 class PhotoSearcher(object):
 
-    """
-    Find a photo for the author in Google Images.
-    """
 
     GOOGLE_IMAGES_API = 'https://www.google.com/search?site=&tbm=isch&q='
+
+    CLASS_WITH_IMAGE = "//*[re:test(@class, 'rg_meta', 'i')]"
     RG_META = re.compile(r'<div\s+class=\"rg_meta\">(.*?)</div>')
+
+    LANGUAGE_DICT = {
+                'Russian': 'писатель',
+                'English': 'writer',
+                'Spanish': 'writer',
+                'German': 'schriftsteller',
+                'French': 'writer',
+                'Italian': 'writer',
+                'Portuguese': 'writer',
+                'Arabic': 'writer',
+                'Polish': 'writer',
+                'Dutch': 'writer',
+                'Chinese': 'writer',
+                'Hindi/Urdu': 'writer',
+                'Japanese': 'writer',
+                'Bengali': 'writer',
+                'Korean': 'writer',
+                'Finnish': 'writer'
+        }
 
     def __init__(self):
         self.tokenizer = TextProcessor()
 
-    def get_photo(self, author):
+    def get_photo(self, author, language):
 
-        query = self._build_query_string(author)
+        query = self._build_query_string(author, language)
         response = self._load_images(query)
         photo = self._find_first_image(response)
-        
+
         return photo
 
     def _load_images(self, query):
@@ -109,11 +127,11 @@ class PhotoSearcher(object):
 
         return image_link
 
-    def _build_query_string(self, author):
+    def _build_query_string(self, author, language):
 
         encoded_author = self.tokenizer.tokenize_for_api(author)
 
-        query = '{url}"{author}"'.format(url=self.GOOGLE_IMAGES_API, author=encoded_author)
+        query = '{url}{lang}+"{author}"'.format(url=self.GOOGLE_IMAGES_API, lang=quote_plus(self.LANGUAGE_DICT[language]), author=encoded_author)
 
         return query
 
@@ -124,7 +142,7 @@ def get_author_info(author, language):
     bio_searcher = AuthorSearcher()
     photo_searcher = PhotoSearcher()
     author_bio = bio_searcher.find_author_in_wiki(author, language)
-    photo = photo_searcher.get_photo(author)
+    photo = photo_searcher.get_photo(author, language)
 
     author_info = {
 

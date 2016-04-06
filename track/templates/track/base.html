@@ -8,9 +8,11 @@
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   {% load staticfiles %}
   <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-  <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">  
+  <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+  {% if request.user.id == user_id %}
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
   <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+  {% endif %}
   <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
   <!-- Font Awesome -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
@@ -31,18 +33,18 @@
 	<style>
     /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
     .row.content {height: 550px}
-    
+
     /* Set gray background color and 100% height */
     .sidenav {
       background-color: #f1f1f1;
       height: 100%;
     }
-        
+
     /* On small screens, set height to 'auto' for the grid */
     @media screen and (max-width: 767px) {
-      .row.content {height: auto;} 
+      .row.content {height: auto;}
     }
-	
+
 	.tilt {
     transform: rotate(3deg);
     -moz-transform: rotate(3deg);
@@ -50,13 +52,13 @@
   }
 
   .column {
-    
+
   }
-  
+
   .version {
-  color:white;  
+  color:white;
   }
-  
+
   .book-cover {
 	height:50%;
 	width:100%;
@@ -65,16 +67,16 @@
     background-repeat: no-repeat;
 	background-position: center;
   }
-  
+
   p {
     font-size: 0.900em;
 	}
 
-	
+
 	</style>
-	
+
 <script type="text/javascript">
- 
+
 	$(onPageLoad);
 
   function onPageLoad()
@@ -124,7 +126,7 @@
 	  }
     });
   }
-  
+
 </script>
 </head>
 
@@ -140,7 +142,7 @@
           <a href="{% url 'track:main' %}" class="navbar-brand">MyBooks<b>Tracker</b></a>
 		  <a class="w3-btn btn btn-warning" href="{% url 'track:create_book' %}" style="padding:10px 5px 10px 5px;border-radius: 0 !important;"  role="button">Add a new book</a>
         </div>
-        
+
         <!-- Navbar Right Menu -->
         <div class="navbar-custom-menu">
           <ul class="nav navbar-nav">
@@ -165,7 +167,7 @@
                   </p>
                 </li>
                 <!-- Menu Body -->
-                
+
                 <!-- Menu Footer-->
                 <div class="row">
 				  <div  class="col-sm-4">
@@ -189,10 +191,10 @@
   {% if books_list %}
 <div class="container-fluid content-wrapper" style="height:99%">
 	<div class="container" style="height:100%;">
-		
+
 		<!-- Content Header (Page header) -->
 	  <section class="content-header">
-	  
+
 		<h1>
 		  Books Board
 		  <small>Version 0.1</small>
@@ -201,9 +203,9 @@
 		  <li><a href="#">Home</a></li>
 		  <li><a href="#">Books Board</a></li>
 		</ol>
-	  
+
 	  </section>
-	
+
 	<!-- Main content -->
     <section class="content" style="height:85%;overflow:auto;">
 	<div class="row" style="height:99%;">
@@ -221,7 +223,7 @@
 			{% endif %}
 			  <div class="box-header with-border">
 				<h3 class="box-title">({{ books|length }}) {{ status.status_text }}</h3>
-				
+
 			  </div><!-- /.box-header -->
 			  <div class="box-body column sortable" id="status_{{status.id}}" style="height:90%;overflow-y:scroll;overflow-x:hidden;">
 				{% if books|length == 0 %}
@@ -231,50 +233,52 @@
 					<p>Drag&Drop a book here to change its status</p>
 					{% endif %}
 				{% endif %}
-				
+
 				{% for book in books %}
-				
+
 				<!-- <div class="" style="width:100%;"> -->
 				<div class="" style="text-align:center;" id="book_{{book.id}}">
-										
+
 					<div class="row" >
 					<div class="col-sm-1"></div>
-					
+
 					<div class="well col-sm-8" style="background-color:#e2e6e9;box-shadow: 10px 5px 5px #b3b3b3;">
-					
-					
+
+
 					<div class="header" ><p>{{ book.author }}</p></div>
-					
-					
+
+
 					<div class="content1"><p style="align:center"><b><a href="{% url 'track:details' book.id %}">{{ book.title }}</a></b></p><br/><br/>
-										
+
 					<p>{{ book.year }}</p>
-					
+
 					</div>
-					
+
 					</div>
+					{% if request.user.id == user_id %}
 					<div class="col-sm-2">
 					<p><a href="{% url 'track:delete_book' book.id %}" class="btn btn-default" role="button">x</a></p>
 					</div>
-					
+					{% endif %}
+
 					</div>
-					
+
 				</div>
-				<!-- </div> -->				
-				
+				<!-- </div> -->
+
 				{% endfor %}
-							
+
 			  </div>
 			  <!-- /.box-body -->
 			</div>
 			<!-- /.box -->
-	
+
 		</div>
 	{% endfor %}
 	</div>
 	</section>
-      <!-- /.content -->	
-	
+      <!-- /.content -->
+
 	</div> <!-- /.container -->
   {% else %}
     <p>You haven't add any books yet.</p>
@@ -284,12 +288,12 @@
 
 <footer class="main-footer">
     <div class="container">
-      
+
       <strong>Copyright &copy; </strong> All rights reserved.
     </div>
     <!-- /.container -->
   </footer>
-  
+
 {% else %}
 	<div>You should be logged in to view your books</div>
     <div><p><a href="{% url 'track:register' %}">Register</a></p><p><a href="{% url 'track:signin' %}">Login</a></p></div>

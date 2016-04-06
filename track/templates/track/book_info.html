@@ -3,7 +3,12 @@
     <head>
     <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>MyBooksTracker | Information about the book</title>
+
+    <meta property="og:title" content="{{ book.title }}" />
+    <meta property="og:description" content="book_info.description" />
+    <meta property="og:image" content="{{ book_info.image }}" />
+
+  <title>MyBooksTracker | {{ book.title }} by {{ book.author }}</title>
   <!-- Tell the browser to be responsive to screen width -->
   <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
   {% load staticfiles %}
@@ -31,27 +36,26 @@
 	<style>
     /* Set height of the grid so .sidenav can be 100% (adjust as needed) */
     .row.content {height: 550px}
-    
+
     /* Set gray background color and 100% height */
     .sidenav {
       background-color: #f1f1f1;
       height: 100%;
     }
-        
+
     /* On small screens, set height to 'auto' for the grid */
     @media screen and (max-width: 767px) {
-      .row.content {height: auto;} 
+      .row.content {height: auto;}
     }
-	
+
 	.tilt {
     transform: rotate(3deg);
     -moz-transform: rotate(3deg);
     -webkit-transform: rotate(3deg);
   }
 
-  
+
 	</style>
-	
 </head>
 
 <body class="skin-blue layout-top-nav">
@@ -63,9 +67,14 @@
       <div class="container">
         <div class="navbar-header" style="padding:5px 0px 0px 0px">
           <a href="{% url 'track:main' %}" class="navbar-brand">MyBooks<b>Tracker</b></a>
+          {% if user.is_authenticated %}
 		  <a class="w3-btn btn btn-warning" href="{% url 'track:create_book' %}" style="padding:10px 5px 10px 5px;border-radius: 0 !important;"  role="button">Add a new book</a>
+		  {% else %}
+		  <a class="w3-btn btn btn-warning" href="{% url 'track:signin' %}" style="padding:10px 5px 10px 5px;border-radius: 0 !important;"  role="button">&nbsp;&nbsp;&nbsp;Sign In&nbsp;&nbsp;&nbsp;</a>
+		  {% endif %}
         </div>
-        
+
+        {% if user.is_authenticated %}
         <!-- Navbar Right Menu -->
         <div class="navbar-custom-menu">
           <ul class="nav navbar-nav">
@@ -90,10 +99,10 @@
                   </p>
                 </li>
                 <!-- Menu Body -->
-                
+
                 <!-- Menu Footer-->
                 <div class="row">
-                  
+
 				  <div  class="col-sm-4">
                     <a href="{% url 'track:change_settings' user.id %}" class="btn btn-default btn-flat">User Profile</a>
                   </div>
@@ -110,6 +119,7 @@
           </ul>
         </div>
         <!-- /.navbar-custom-menu -->
+        {% endif %}
       </div>
       <!-- /.container-fluid -->
     </nav>
@@ -132,7 +142,7 @@
 		{% if book %}
         <section class="content">
 			<div class="row">
-			  
+
 			  <div class="col-md-3">
 
               <!-- Profile Image -->
@@ -141,8 +151,8 @@
                   <img src="{{ book_info.image }}" class="img-responsive" alt="Book cover for '{{ book.title }}'"></img>
 				  <br/>
                   <h3 class="profile-username text-center" style="text-transform:uppercase"><b>{{ book.title }}</b></h3>
-                  
-				  
+
+
 					<p><b>Author:</b> {{ book.author }}</p>
 					<p><b>Year:</b> {{ book.year }}</p>
 					<p><b>Genre:</b> {{ book.genre }}</p>
@@ -158,32 +168,52 @@
 
                 </div><!-- /.box-body -->
               </div><!-- /.box -->
+
+              <div class="box">
+                <div class="box-body box-profile">
+              <script type="text/javascript">
+                    (function() {
+                  if (window.pluso)if (typeof window.pluso.start == "function") return;
+                  if (window.ifpluso==undefined) { window.ifpluso = 1;
+                    var d = document, s = d.createElement('script'), g = 'getElementsByTagName';
+                    s.type = 'text/javascript'; s.charset='UTF-8'; s.async = true;
+                    s.src = ('https:' == window.location.protocol ? 'https' : 'http')  + '://share.pluso.ru/pluso-like.js';
+                    var h=d[g]('body')[0];
+                    h.appendChild(s);
+                  }})();
+                  </script>
+                <div class="pluso" data-background="transparent" data-options="medium,square,line,horizontal,nocounter,theme=01" data-services="vkontakte,odnoklassniki,facebook,twitter,google"></div>
+                </div><!-- /.box-body -->
+              </div><!-- /.box -->
+
 			  </div>
 
-			
+
+
+
 			<div class="col-md-9">
-				
+
 				<div class="nav-tabs-custom">
-                
+
 				<ul class="nav nav-tabs">
                   <li class="active"><a href="#descr" data-toggle="tab">Book Description</a></li>
                   <li><a href="#author" data-toggle="tab">Author Info</a></li>
                 </ul>
-				
+
 				<div class="tab-content">
                   <div class="active tab-pane" id="descr">
-					
+
 					<div class="well">
-					
+
 					{% if book_info.description %}
 						<p>{{ book_info.description }}</p>
 					{% else %}
 						<p>No description found</p>
-					{% endif %} 
+					{% endif %}
 					</div>
-				  
+
 				  </div>
-				  
+
 				  <div class="tab-pane" id="author">
 					<div class="well">
 						<div class="row">
@@ -191,7 +221,7 @@
 							<img src="{{ author_info.photo }}" class="img-responsive" alt="Photo of '{{ book.author }}'"></img>
 							</div>
 						<div class="col-sm-10">
-						
+
 						{% if author_info %}
 							<p>{{ author_info.author_bio }}</p>
 						{% else %}
@@ -201,14 +231,14 @@
 						</div>
 					</div>
 				  </div>
-				
+
 				</div>
 				</div>
 			</div>
-		
+
 			</div>
-			
-			
+
+
 		</section>
 		{% endif %}
 
@@ -216,12 +246,12 @@
 
 <footer class="main-footer">
     <div class="container">
-      
+
       <strong>Copyright &copy; </strong> All rights reserved.
     </div>
     <!-- /.container -->
   </footer>
-  
+
 
 </div> <!-- End Wrapper-->
 

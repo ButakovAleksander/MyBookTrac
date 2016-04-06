@@ -215,7 +215,7 @@ def index(request, user_id):
             status_to_delete = Status.objects.all().filter(status_text="Deleted")[0]
             books_list.pop(status_to_delete)
 
-            context = {'status_list': status_list, 'books_list': books_list}
+            context = {'status_list': status_list, 'books_list': books_list, 'user_id': int(user_id)}
 
             return render(request, template, context)
 
